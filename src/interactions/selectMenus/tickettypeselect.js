@@ -11,35 +11,35 @@ import {
 const TICKET_TYPES = {
   purchase: {
     label: 'Purchase Ticket',
-    emoji: '🛒',
-    color: 0x57f287,       // green
-    staffRoleId: null,     // set to your staff role ID e.g. '123456789'
+    emoji: '💰',
+    color: 0x57f287,
+    staffRoleId: '1505869755809271880',
     description: 'Thank you for reaching out about a purchase. Our team will assist you shortly.',
-    categoryId: null,      // set to a category channel ID to sort tickets
+    categoryId: '1505525144582488115',
   },
   support: {
     label: 'Support Ticket',
     emoji: '🛠️',
-    color: 0x5865f2,       // blurple
-    staffRoleId: null,
+    color: 0x5865f2,
+    staffRoleId: '1505869755809271880',
     description: 'Support ticket opened! Please describe your issue and a staff member will be with you soon.',
-    categoryId: null,
+    categoryId: '1505525144582488115',
   },
   suggestion: {
     label: 'Suggestion Ticket',
     emoji: '💡',
-    color: 0xfee75c,       // yellow
-    staffRoleId: null,
+    color: 0xfee75c,
+    staffRoleId: '1505869755809271880',
     description: 'Thanks for your suggestion! Please share your idea in detail below.',
-    categoryId: null,
+    categoryId: '1505525144582488115',
   },
   partnership: {
     label: 'Partnership Request',
     emoji: '🤝',
-    color: 0xeb459e,       // fuchsia
-    staffRoleId: null,
+    color: 0xeb459e,
+    staffRoleId: '1505869755809271880',
     description: 'Partnership request received! Please tell us about yourself and what kind of partnership you have in mind.',
-    categoryId: null,
+    categoryId: '1505525144582488115',
   },
 };
 
@@ -145,7 +145,7 @@ export default {
     const closeButton = new ButtonBuilder()
       .setCustomId(`ticket_close_${ticketChannel.id}`)
       .setLabel('Close Ticket')
-      .setEmoji('🔒')
+      .setEmoji('❌')
       .setStyle(ButtonStyle.Danger);
 
     const row = new ActionRowBuilder().addComponents(closeButton);
