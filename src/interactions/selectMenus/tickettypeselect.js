@@ -11,7 +11,7 @@ import {
 const TICKET_TYPES = {
   purchase: {
     label: 'Purchase Ticket',
-    emoji: '💰',
+    emoji: '🛒',
     color: 0x57f287,
     staffRoleId: '1505869755809271880',
     description: 'Thank you for reaching out about a purchase. Our team will assist you shortly.',
@@ -44,7 +44,7 @@ const TICKET_TYPES = {
 };
 
 export default {
-  customId: 'ticket_type_select',
+  name: 'ticket_type_select',
 
   async execute(interaction) {
     const type = interaction.values[0];
@@ -145,7 +145,7 @@ export default {
     const closeButton = new ButtonBuilder()
       .setCustomId(`ticket_close_${ticketChannel.id}`)
       .setLabel('Close Ticket')
-      .setEmoji('❌')
+      .setEmoji('🔒')
       .setStyle(ButtonStyle.Danger);
 
     const row = new ActionRowBuilder().addComponents(closeButton);
