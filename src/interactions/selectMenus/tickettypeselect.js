@@ -143,7 +143,7 @@ export default {
 
     // Close button
     const closeButton = new ButtonBuilder()
-      .setCustomId(`ticket_close_${ticketChannel.id}`)
+      .setCustomId(`ticket_close`)
       .setLabel('Close Ticket')
       .setEmoji('🔒')
       .setStyle(ButtonStyle.Danger);
