@@ -153,9 +153,9 @@ export async function createTicket(guild, member, categoryId, reason = 'No reaso
     });
 
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ticket_close').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
-      new ButtonBuilder().setCustomId('ticket_claim').setLabel('Claim').setStyle(ButtonStyle.Primary).setEmoji('🙋'),
-      new ButtonBuilder().setCustomId('ticket_pin').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
+      new ButtonBuilder().setCustomId('ticket_close:').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
+      new ButtonBuilder().setCustomId('ticket_claim:').setLabel('Claim').setStyle(ButtonStyle.Primary).setEmoji('🙋'),
+      new ButtonBuilder().setCustomId('ticket_pin:').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
     );
 
     if (ticketConfig.enablePriority) {
@@ -322,8 +322,8 @@ export async function closeTicket(channel, closer, reason = 'No reason provided'
     });
 
     const controlRow = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ticket_reopen').setLabel('Reopen Ticket').setStyle(ButtonStyle.Success).setEmoji('🔓'),
-      new ButtonBuilder().setCustomId('ticket_delete').setLabel('Delete Ticket').setStyle(ButtonStyle.Danger).setEmoji('🗑️')
+      new ButtonBuilder().setCustomId('ticket_reopen:').setLabel('Reopen Ticket').setStyle(ButtonStyle.Success).setEmoji('🔓'),
+      new ButtonBuilder().setCustomId('ticket_delete:').setLabel('Delete Ticket').setStyle(ButtonStyle.Danger).setEmoji('🗑️')
     );
 
     await channel.send({ embeds: [closeEmbed], components: [controlRow] });
@@ -375,16 +375,16 @@ export async function claimTicket(channel, claimer) {
       if (claimedField) claimedField.value = claimer.toString();
 
       const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('ticket_close').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
-        new ButtonBuilder().setCustomId('ticket_claim').setLabel('Claimed').setStyle(ButtonStyle.Secondary).setEmoji('🙋').setDisabled(true),
-        new ButtonBuilder().setCustomId('ticket_pin').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
+        new ButtonBuilder().setCustomId('ticket_close:').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
+        new ButtonBuilder().setCustomId('ticket_claim:').setLabel('Claimed').setStyle(ButtonStyle.Secondary).setEmoji('🙋').setDisabled(true),
+        new ButtonBuilder().setCustomId('ticket_pin:').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
       );
       await ticketMessage.edit({ embeds: [embed], components: [row] });
     }
 
     const claimEmbed = createEmbed({ title: 'Ticket Claimed', description: `🎉 ${claimer} has claimed this ticket!`, color: '#2ecc71' });
     const unclaimRow = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ticket_unclaim').setLabel('Unclaim').setStyle(ButtonStyle.Secondary).setEmoji('🔓')
+      new ButtonBuilder().setCustomId('ticket_unclaim:').setLabel('Unclaim').setStyle(ButtonStyle.Secondary).setEmoji('🔓')
     );
 
     const claimStatusMessage = messages.find(m =>
@@ -449,16 +449,16 @@ export async function reopenTicket(channel, reopener) {
       if (statusField) statusField.value = '🟢 Open';
 
       const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('ticket_close').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
-        new ButtonBuilder().setCustomId('ticket_claim').setLabel(ticketData.claimedBy ? 'Claimed' : 'Claim').setStyle(ticketData.claimedBy ? ButtonStyle.Secondary : ButtonStyle.Primary).setEmoji('🙋').setDisabled(!!ticketData.claimedBy),
-        new ButtonBuilder().setCustomId('ticket_pin').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
+        new ButtonBuilder().setCustomId('ticket_close:').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
+        new ButtonBuilder().setCustomId('ticket_claim:').setLabel(ticketData.claimedBy ? 'Claimed' : 'Claim').setStyle(ticketData.claimedBy ? ButtonStyle.Secondary : ButtonStyle.Primary).setEmoji('🙋').setDisabled(!!ticketData.claimedBy),
+        new ButtonBuilder().setCustomId('ticket_pin:').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
       );
       await ticketMessage.edit({ embeds: [embed], components: [row] });
     }
 
     const reopenEmbed = createEmbed({ title: 'Ticket Reopened', description: `🔓 ${reopener} has reopened this ticket!`, color: '#2ecc71' });
     const closeStatusMessage = messages.find(m =>
-      m.embeds.length > 0 && m.embeds[0].title === 'Ticket Closed' && m.components.length > 0 && m.components[0].components.some(c => c.customId === 'ticket_reopen')
+      m.embeds.length > 0 && m.embeds[0].title === 'Ticket Closed' && m.components.length > 0 && m.components[0].components.some(c => c.customId === 'ticket_reopen:')
     );
     if (closeStatusMessage) { await closeStatusMessage.edit({ embeds: [reopenEmbed], components: [] }); }
     else { await channel.send({ embeds: [reopenEmbed] }); }
@@ -589,9 +589,9 @@ export async function unclaimTicket(channel, unclaimer) {
       if (claimedField) claimedField.value = 'Not claimed';
 
       const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('ticket_close').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
-        new ButtonBuilder().setCustomId('ticket_claim').setLabel('Claim').setStyle(ButtonStyle.Primary).setEmoji('🙋'),
-        new ButtonBuilder().setCustomId('ticket_pin').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
+        new ButtonBuilder().setCustomId('ticket_close:').setLabel('Close Ticket').setStyle(ButtonStyle.Danger).setEmoji('🔒'),
+        new ButtonBuilder().setCustomId('ticket_claim:').setLabel('Claim').setStyle(ButtonStyle.Primary).setEmoji('🙋'),
+        new ButtonBuilder().setCustomId('ticket_pin:').setLabel('Pin').setStyle(ButtonStyle.Secondary).setEmoji('📌')
       );
       await ticketMessage.edit({ embeds: [embed], components: [row] });
     }
