@@ -2,24 +2,11 @@ import { createTicket } from '../../services/ticket.js';
 import { errorEmbed } from '../../utils/embeds.js';
 import { MessageFlags } from 'discord.js';
 
-// Ticket type labels shown in the opening message
 const TICKET_TYPES = {
-  purchase: {
-    label: 'Purchase Ticket',
-    reason: 'Purchase enquiry',
-  },
-  support: {
-    label: 'Support Ticket',
-    reason: 'Support request',
-  },
-  suggestion: {
-    label: 'Suggestion Ticket',
-    reason: 'Suggestion submission',
-  },
-  partnership: {
-    label: 'Partnership Request',
-    reason: 'Partnership enquiry',
-  },
+  purchase: { label: 'Purchase Ticket', reason: 'Purchase enquiry' },
+  support: { label: 'Support Ticket', reason: 'Support request' },
+  suggestion: { label: 'Suggestion Ticket', reason: 'Suggestion submission' },
+  partnership: { label: 'Partnership Request', reason: 'Partnership enquiry' },
 };
 
 const CATEGORY_ID = '1505525144582488115';
@@ -48,13 +35,9 @@ export default {
     );
 
     if (result.success) {
-      await interaction.editReply({
-        content: `✅ Your **${config.label}** has been opened! → ${result.channel}`,
-      });
+      await interaction.editReply({ content: `Your **${config.label}** has been opened! → ${result.channel}` });
     } else {
-      await interaction.editReply({
-        embeds: [errorEmbed('Error', result.error || 'Failed to create ticket.')],
-      });
+      await interaction.editReply({ embeds: [errorEmbed('Error', result.error || 'Failed to create ticket.')] });
     }
   },
 };
