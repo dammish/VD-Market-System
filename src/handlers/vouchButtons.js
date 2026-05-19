@@ -6,16 +6,27 @@ import {
   EmbedBuilder,
   MessageFlags,
 } from 'discord.js';
+import { getTicketData } from '../utils/database.js';
 import { logger } from '../utils/logger.js';
 
 const VOUCH_CHANNEL_ID = '1504208079892250634';
-
-const STAR_RATINGS = { '1': '1/5', '2': '2/5', '3': '3/5', '4': '4/5', '5': '5/5' };
 
 const vouchStartHandler = {
   name: 'vouch_start',
   async execute(interaction, client, args) {
     const [guildId, ticketId] = args;
+
+    // Try to get the claimer from ticket data
+    let defaultSeller = '';
+    try {
+      const ticketData = await getTicketData(guildId, ticketId);
+      if (ticketData?.claimedBy) {
+        const claimer = await client.users.fetch(ticketData.claimedBy).catch(() => null);
+        if (claimer) defaultSeller = claimer.username;
+      }
+    } catch (err) {
+      logger.warn(`Could not fetch claimer for vouch: ${err.message}`);
+    }
 
     const modal = new ModalBuilder()
       .setCustomId(`vouch_submit:${guildId}:${ticketId}`)
@@ -23,16 +34,41 @@ const vouchStartHandler = {
 
     modal.addComponents(
       new ActionRowBuilder().addComponents(
-        new TextInputBuilder().setCustomId('seller').setLabel('Seller (username or @mention)').setStyle(TextInputStyle.Short).setPlaceholder('e.g. Dammish').setRequired(true).setMaxLength(100)
+        new TextInputBuilder()
+          .setCustomId('seller')
+          .setLabel('Seller (username or @mention)')
+          .setStyle(TextInputStyle.Short)
+          .setValue(defaultSeller)
+          .setPlaceholder('e.g. Dammish')
+          .setRequired(true)
+          .setMaxLength(100)
       ),
       new ActionRowBuilder().addComponents(
-        new TextInputBuilder().setCustomId('item').setLabel('Item / Service Purchased').setStyle(TextInputStyle.Short).setPlaceholder('e.g. Discord Nitro').setRequired(true).setMaxLength(200)
+        new TextInputBuilder()
+          .setCustomId('item')
+          .setLabel('Item / Service Purchased')
+          .setStyle(TextInputStyle.Short)
+          .setPlaceholder('e.g. Discord Nitro')
+          .setRequired(true)
+          .setMaxLength(200)
       ),
       new ActionRowBuilder().addComponents(
-        new TextInputBuilder().setCustomId('rating').setLabel('Rating (1-5)').setStyle(TextInputStyle.Short).setPlaceholder('Enter a number from 1 to 5').setRequired(true).setMaxLength(1)
+        new TextInputBuilder()
+          .setCustomId('rating')
+          .setLabel('Rating (1-5)')
+          .setStyle(TextInputStyle.Short)
+          .setPlaceholder('Enter a number from 1 to 5')
+          .setRequired(true)
+          .setMaxLength(1)
       ),
       new ActionRowBuilder().addComponents(
-        new TextInputBuilder().setCustomId('review').setLabel('Review').setStyle(TextInputStyle.Paragraph).setPlaceholder('Write your review here...').setRequired(true).setMaxLength(1000)
+        new TextInputBuilder()
+          .setCustomId('review')
+          .setLabel('Review')
+          .setStyle(TextInputStyle.Paragraph)
+          .setPlaceholder('Write your review here...')
+          .setRequired(true)
+          .setMaxLength(1000)
       ),
     );
 
@@ -79,7 +115,7 @@ const vouchSubmitHandler = {
         { name: 'Review', value: review, inline: false },
       )
       .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-      .setFooter({ text: `VD Market` })
+      .setFooter({ text: 'VD Market' })
       .setTimestamp();
 
     try {
@@ -94,7 +130,7 @@ const vouchSubmitHandler = {
     }
 
     await interaction.update({
-      embeds: [new EmbedBuilder().setTitle('Vouch Submitted').setDescription(`Thank you for your vouch! Your review has been posted.`).setColor(0x57f287).setTimestamp()],
+      embeds: [new EmbedBuilder().setTitle('Vouch Submitted').setDescription('Thank you for your vouch! Your review has been posted.').setColor(0x57f287).setTimestamp()],
       components: [],
     });
   },
