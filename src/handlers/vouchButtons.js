@@ -22,7 +22,7 @@ const vouchStartHandler = {
       const ticketData = await getTicketData(guildId, ticketId);
       if (ticketData?.claimedBy) {
         const claimer = await client.users.fetch(ticketData.claimedBy).catch(() => null);
-        if (claimer) defaultSeller = claimer.username;
+        if (claimer) defaultSeller = `<@${ticketData.claimedBy}>`;
       }
     } catch (err) {
       logger.warn(`Could not fetch claimer for vouch: ${err.message}`);
