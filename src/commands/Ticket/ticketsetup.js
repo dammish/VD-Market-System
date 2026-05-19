@@ -16,11 +16,7 @@ export default {
     .setDescription('Set up the ticket panel with a dropdown menu')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .addChannelOption(option =>
-      option
-        .setName('channel')
-        .setDescription('Channel to post the ticket panel in (defaults to current channel)')
-        .addChannelTypes(ChannelType.GuildText)
-        .setRequired(false)
+      option.setName('channel').setDescription('Channel to post the ticket panel in').addChannelTypes(ChannelType.GuildText).setRequired(false)
     )
     .addStringOption(option =>
       option.setName('title').setDescription('Title for the ticket panel embed').setRequired(false)
@@ -40,28 +36,16 @@ export default {
     const title = interaction.options.getString('title') ?? 'VD Market Support';
     const description =
       interaction.options.getString('description') ??
-      'Welcome to **VD Market** support!\n\nSelect a category below that best describes your request.\n\n**Purchase** — Help with an order or payment\n**Support** — General assistance or issues\n**Suggestion** — Share your ideas with us\n**Partnership** — Collaborate or partner with us';
+      'Welcome to **VD Market** support!\n\nSelect a category below that best describes your request.\n\n💰 **Purchase** — Help with an order or payment\n🛠️ **Support** — General assistance or issues\n💡 **Suggestion** — Share your ideas with us\n🤝 **Partnership** — Collaborate or partner with us';
 
     const selectMenu = new StringSelectMenuBuilder()
       .setCustomId('ticket_type_select')
-      .setPlaceholder('Select a ticket category...')
+      .setPlaceholder('Choose a ticket category...')
       .addOptions(
-        new StringSelectMenuOptionBuilder()
-          .setLabel('💰Purchase Ticket')
-          .setDescription('Help with a purchase, payment, or order issue')
-          .setValue('purchase'),
-        new StringSelectMenuOptionBuilder()
-          .setLabel('🛠️Support Ticket')
-          .setDescription('General support, bugs, or account issues')
-          .setValue('support'),
-        new StringSelectMenuOptionBuilder()
-          .setLabel('💡Suggestion Ticket')
-          .setDescription('Submit a suggestion or feature request')
-          .setValue('suggestion'),
-        new StringSelectMenuOptionBuilder()
-          .setLabel('🤝Partnership Request')
-          .setDescription('Inquire about partnering with VD Market')
-          .setValue('partnership'),
+        new StringSelectMenuOptionBuilder().setLabel('Purchase Ticket').setDescription('Help with a purchase, payment, or order issue').setValue('purchase').setEmoji('💰'),
+        new StringSelectMenuOptionBuilder().setLabel('Support Ticket').setDescription('General support, bugs, or account issues').setValue('support').setEmoji('🛠️'),
+        new StringSelectMenuOptionBuilder().setLabel('Suggestion Ticket').setDescription('Submit a suggestion or feature request').setValue('suggestion').setEmoji('💡'),
+        new StringSelectMenuOptionBuilder().setLabel('Partnership Request').setDescription('Inquire about partnering with VD Market').setValue('partnership').setEmoji('🤝'),
       );
 
     const row = new ActionRowBuilder().addComponents(selectMenu);
@@ -77,10 +61,7 @@ export default {
       await channel.send({ embeds: [embed], components: [row] });
       await interaction.editReply({ content: `Ticket panel posted in ${channel}.` });
     } catch (error) {
-      await interaction.editReply({ content: `Failed to send the ticket panel to ${channel}. Make sure I have permission to send messages there.` });
-    }
-  },
-};
+      await interaction.editReply({ content: `Failed to send the ticket panel to ${channel}.` });
     }
   },
 };
