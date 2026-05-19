@@ -8,6 +8,8 @@ import {
   ChannelType,
 } from 'discord.js';
 
+const STAFF_ROLE_ID = '1505869755809271880';
+
 export default {
   data: new SlashCommandBuilder()
     .setName('ticketsetup')
@@ -21,73 +23,64 @@ export default {
         .setRequired(false)
     )
     .addStringOption(option =>
-      option
-        .setName('title')
-        .setDescription('Title for the ticket panel embed')
-        .setRequired(false)
+      option.setName('title').setDescription('Title for the ticket panel embed').setRequired(false)
     )
     .addStringOption(option =>
-      option
-        .setName('description')
-        .setDescription('Description text for the ticket panel embed')
-        .setRequired(false)
+      option.setName('description').setDescription('Description text for the ticket panel embed').setRequired(false)
     ),
 
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
 
+    if (!interaction.member.roles.cache.has(STAFF_ROLE_ID)) {
+      return interaction.editReply({ content: 'You need the Staff role to use this command.' });
+    }
+
     const channel = interaction.options.getChannel('channel') ?? interaction.channel;
-    const title = interaction.options.getString('title') ?? '🎫 VD Market Support';
+    const title = interaction.options.getString('title') ?? 'VD Market Support';
     const description =
       interaction.options.getString('description') ??
-      'Welcome to **VD Market** support!\n\nPlease select a category below that best describes your request and a ticket will be opened for you.\n\n> 🛒 **Purchase** — Help with an order or payment\n> 🛠️ **Support** — General assistance or issues\n> 💡 **Suggestion** — Share your ideas with us\n> 🤝 **Partnership** — Collaborate or partner with us';
+      'Welcome to **VD Market** support!\n\nSelect a category below that best describes your request.\n\n**Purchase** — Help with an order or payment\n**Support** — General assistance or issues\n**Suggestion** — Share your ideas with us\n**Partnership** — Collaborate or partner with us';
 
-    // Build the dropdown menu
     const selectMenu = new StringSelectMenuBuilder()
       .setCustomId('ticket_type_select')
-      .setPlaceholder('📋 Choose a ticket category...')
+      .setPlaceholder('Select a ticket category...')
       .addOptions(
         new StringSelectMenuOptionBuilder()
-          .setLabel('Purchase Ticket')
+          .setLabel('💰Purchase Ticket')
           .setDescription('Help with a purchase, payment, or order issue')
-          .setValue('purchase')
-          .setEmoji('🛒'),
+          .setValue('purchase'),
         new StringSelectMenuOptionBuilder()
-          .setLabel('Support Ticket')
+          .setLabel('🛠️Support Ticket')
           .setDescription('General support, bugs, or account issues')
-          .setValue('support')
-          .setEmoji('🛠️'),
+          .setValue('support'),
         new StringSelectMenuOptionBuilder()
-          .setLabel('Suggestion Ticket')
+          .setLabel('💡Suggestion Ticket')
           .setDescription('Submit a suggestion or feature request')
-          .setValue('suggestion')
-          .setEmoji('💡'),
+          .setValue('suggestion'),
         new StringSelectMenuOptionBuilder()
-          .setLabel('Partnership Request')
+          .setLabel('🤝Partnership Request')
           .setDescription('Inquire about partnering with VD Market')
-          .setValue('partnership')
-          .setEmoji('🤝'),
+          .setValue('partnership'),
       );
 
     const row = new ActionRowBuilder().addComponents(selectMenu);
 
-    // Build the embed panel
     const embed = new EmbedBuilder()
       .setTitle(title)
       .setDescription(description)
       .setColor(0x5865f2)
-      .setFooter({ text: 'VD Market • Select a category to open a ticket' })
+      .setFooter({ text: 'VD Market — Select a category to open a ticket' })
       .setTimestamp();
 
     try {
       await channel.send({ embeds: [embed], components: [row] });
-      await interaction.editReply({
-        content: `✅ Ticket panel successfully posted in ${channel}!`,
-      });
+      await interaction.editReply({ content: `Ticket panel posted in ${channel}.` });
     } catch (error) {
-      await interaction.editReply({
-        content: `❌ Failed to send the ticket panel to ${channel}. Make sure I have permission to send messages there.`,
-      });
+      await interaction.editReply({ content: `Failed to send the ticket panel to ${channel}. Make sure I have permission to send messages there.` });
+    }
+  },
+};
     }
   },
 };
