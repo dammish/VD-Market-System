@@ -3,10 +3,10 @@ import { errorEmbed } from '../../utils/embeds.js';
 import { MessageFlags } from 'discord.js';
 
 const TICKET_TYPES = {
-  purchase: { label: 'Purchase Ticket', reason: 'Purchase enquiry' },
-  support: { label: 'Support Ticket', reason: 'Support request' },
-  suggestion: { label: 'Suggestion Ticket', reason: 'Suggestion submission' },
-  partnership: { label: 'Partnership Request', reason: 'Partnership enquiry' },
+  purchase: { label: 'Purchase Ticket', reason: 'Purchase enquiry', emoji: '💰' },
+  support: { label: 'Support Ticket', reason: 'Support request', emoji: '🛠️' },
+  suggestion: { label: 'Suggestion Ticket', reason: 'Suggestion submission', emoji: '💡' },
+  partnership: { label: 'Partnership Request', reason: 'Partnership enquiry', emoji: '🤝' },
 };
 
 const CATEGORY_ID = '1505525144582488115';
