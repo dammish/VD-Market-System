@@ -272,11 +272,31 @@ export async function closeTicket(channel, closer, reason = 'No reason provided'
       }
     }
 
-    // Send vouch DM for purchase tickets instead of close DM
+    // Send vouch prompt in channel for purchase tickets
     if (isPurchaseTicket(ticketData)) {
-      await sendVouchDM(channel.client, ticketData, channel.name);
+      try {
+        const buyer = await channel.guild.members.fetch(ticketData.userId).catch(() => null);
+        if (buyer) {
+          const vouchEmbed = new EmbedBuilder()
+            .setTitle('Leave a Vouch')
+            .setDescription(`${buyer}, thank you for your purchase!\n\nPlease click the button below to leave a vouch for your experience.`)
+            .setColor(0xffd700)
+            .setFooter({ text: 'VD Market' })
+            .setTimestamp();
+
+          const vouchButton = new ButtonBuilder()
+            .setCustomId(\`vouch_start:\${channel.guild.id}:\${channel.id}\`)
+            .setLabel('Leave a Vouch')
+            .setEmoji('⭐')
+            .setStyle(ButtonStyle.Primary);
+
+          const vouchRow = new ActionRowBuilder().addComponents(vouchButton);
+          await channel.send({ content: \`\${buyer}\`, embeds: [vouchEmbed], components: [vouchRow] });
+        }
+      } catch (err) {
+        logger.warn(\`Could not send vouch prompt: \${err.message}\`);
+      }
     }
-    // No DM sent for non-purchase tickets (removed close notification)
 
     try {
       const user = await channel.guild.members.fetch(ticketData.userId).catch(() => null);
