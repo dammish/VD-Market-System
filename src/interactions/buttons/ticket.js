@@ -7,7 +7,7 @@ import createTicketHandler, {
   reopenTicketHandler,
   deleteTicketHandler,
 } from '../../handlers/ticketButtons.js';
-import { vouchStartHandler, vouchSkipHandler } from '../../handlers/vouchButtons.js';
+import { vouchStartHandler } from '../../handlers/vouchButtons.js';
 
 export default [
   createTicketHandler,
@@ -19,5 +19,4 @@ export default [
   reopenTicketHandler,
   deleteTicketHandler,
   vouchStartHandler,
-  vouchSkipHandler,
 ];
