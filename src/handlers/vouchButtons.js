@@ -16,13 +16,12 @@ const vouchStartHandler = {
   async execute(interaction, client, args) {
     const [guildId, ticketId] = args;
 
-    // Try to get the claimer from ticket data
+    // Try to get the claimer from ticket data to pre-fill seller
     let defaultSeller = '';
     try {
       const ticketData = await getTicketData(guildId, ticketId);
       if (ticketData?.claimedBy) {
-        const claimer = await client.users.fetch(ticketData.claimedBy).catch(() => null);
-        if (claimer) defaultSeller = `<@${ticketData.claimedBy}>`;
+        defaultSeller = `<@${ticketData.claimedBy}>`;
       }
     } catch (err) {
       logger.warn(`Could not fetch claimer for vouch: ${err.message}`);
@@ -76,16 +75,6 @@ const vouchStartHandler = {
   },
 };
 
-const vouchSkipHandler = {
-  name: 'vouch_skip',
-  async execute(interaction, client, args) {
-    await interaction.update({
-      embeds: [new EmbedBuilder().setTitle('Vouch Skipped').setDescription('No problem! Thanks for using VD Market.').setColor(0x99aab5).setTimestamp()],
-      components: [],
-    });
-  },
-};
-
 const vouchSubmitHandler = {
   name: 'vouch_submit',
   async execute(interaction, client, args) {
@@ -129,6 +118,7 @@ const vouchSubmitHandler = {
       logger.error('Failed to send vouch to channel:', err.message);
     }
 
+    // Update the vouch prompt message to show it's been submitted
     await interaction.update({
       embeds: [new EmbedBuilder().setTitle('Vouch Submitted').setDescription('Thank you for your vouch! Your review has been posted.').setColor(0x57f287).setTimestamp()],
       components: [],
@@ -136,5 +126,5 @@ const vouchSubmitHandler = {
   },
 };
 
-export { vouchStartHandler, vouchSkipHandler, vouchSubmitHandler };
-export default [vouchStartHandler, vouchSkipHandler];
+export { vouchStartHandler, vouchSubmitHandler };
+export default [vouchStartHandler];
